@@ -21,4 +21,10 @@ interface CurrencyDao {
     @Query("SELECT * FROM currency ORDER BY alfa3 ASC")
     fun getCurrencies(): Flow<List<Currency>>
 
+    @Query("SELECT *, :amount / rate as amount FROM currency ORDER BY alfa3 ASC")
+    fun getCountedCurrencies(amount: Double): Flow<List<Currency>>
+
+    @Query("UPDATE currency SET amount = :amount / rate")
+    suspend fun updateAmounts(amount: Double)
+
 }

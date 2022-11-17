@@ -2,37 +2,31 @@ package kb.petproject.currencyconverter2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.core.widget.doAfterTextChanged
-import androidx.databinding.DataBindingUtil
-import kb.petproject.currencyconverter2.databinding.ActivityMainBinding
-import kb.petproject.currencyconverter2.model.CurrencyViewModel
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel: CurrencyViewModel by viewModels()
+        // Retrieve NavController from the NavHostFragment
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        // Set up the action bar for use with the NavController
+        NavigationUI.setupActionBarWithNavController(this, navController)
 
-        val binding: ActivityMainBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_main)
+    }
 
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-        binding.currencyAmountMainEditText.doAfterTextChanged {
-            viewModel.setMainCurrencyAmount(it.toString())
-        }
-
-        binding.currencyRate1EditText.doAfterTextChanged {
-            viewModel.setMainCurrencyRate(1, it.toString())
-        }
-
-        binding.currencyRate2EditText.doAfterTextChanged {
-            viewModel.setMainCurrencyRate(2, it.toString())
-        }
-
+    /**
+     * Handle navigation when the user chooses Up from the action bar.
+     */
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
 }

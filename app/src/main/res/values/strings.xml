@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Currency converter</string>
+    <string name="app_name">Currency converter 2</string>
+    <string name="add_new_currency">Add new currency</string>
+    <string name="currency">Currency</string>
+    <string name="amount">Amount</string>
+    <string name="rate">Rate</string>
+    <string name="count">Count</string>
+    <string name="currency_alfa3_req">Currency <font color='#FF0000'>*</font></string>
+    <string name="currency_rate_req">Rate <font color='#FF0000'>*</font></string>
+    <string name="save_action">Save</string>
 </resources>

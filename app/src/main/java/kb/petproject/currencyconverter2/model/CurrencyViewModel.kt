@@ -1,86 +1,97 @@
 package kb.petproject.currencyconverter2.model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import kotlin.math.roundToInt
+import androidx.lifecycle.*
+import kb.petproject.currencyconverter2.data.Currency
+import kb.petproject.currencyconverter2.data.CurrencyDao
+import kotlinx.coroutines.launch
 
-class CurrencyViewModel: ViewModel() {
+class CurrencyViewModel(private val currencyDao: CurrencyDao): ViewModel() {
 
-    private val _currencyAmountMain = MutableLiveData<Double>()
-    val currencyAmountMain: LiveData<Double> = _currencyAmountMain
+    private val _mainAmount = MutableLiveData<Double>()
+    val mainAmount: LiveData<Double> = _mainAmount
 
-    private val _currencyAmount1 = MutableLiveData<Double>()
-    val currencyAmount1: LiveData<Double> = _currencyAmount1
-
-    private val _currencyAmount2 = MutableLiveData<Double>()
-    val currencyAmount2: LiveData<Double> = _currencyAmount2
-
-    private val _currencyRate1 = MutableLiveData<Double>()
-    val currencyRate1: LiveData<Double> = _currencyRate1
-
-    private val _currencyRate2 = MutableLiveData<Double>()
-    val currencyRate2: LiveData<Double> = _currencyRate2
+    val allCurrencies: LiveData<List<Currency>> = currencyDao.getCurrencies().asLiveData()
 
     init {
-        resetValues(false)
+        _mainAmount.value = 4444444.0
     }
 
-    private fun count() {
+    fun retrieveCurrency(id: Int): LiveData<Currency> {
+        return currencyDao.getCurrency(id).asLiveData()
+    }
 
-        if (currencyAmountMain.value == null || currencyAmountMain.value == 0.0) {
-            resetValues(true)
-        }
-
-        currencyRate1.value?.let {
-            _currencyAmount1.value = roundNumber(currencyAmountMain.value!!.div(it))
-        }
-
-        currencyRate2.value?.let {
-            _currencyAmount2.value = roundNumber(currencyAmountMain.value!!.div(it))
+    private fun insertCurrency(currency: Currency) {
+        viewModelScope.launch {
+            currencyDao.insert(currency)
         }
     }
 
-    private fun roundNumber(number: Double): Double {
-        val decimalFormat = DecimalFormat("#.##")
-        decimalFormat.roundingMode = RoundingMode.HALF_UP
-        return decimalFormat.format(number).toDouble()
-    }
-
-    // replace with 2 functions: resetAmounts() and resetRates()
-    private fun resetValues(amountsOnly: Boolean) {
-        _currencyAmountMain.value = 0.0
-        _currencyAmount1.value = 0.0
-        _currencyAmount2.value = 0.0
-
-        if (!amountsOnly) {
-            _currencyRate1.value = 1.0
-            _currencyRate2.value = 1.0
+    private fun updateCurrency(currency: Currency) {
+        viewModelScope.launch {
+            currencyDao.update(currency)
         }
     }
 
-    fun setMainCurrencyAmount(amount: String) {
-        _currencyAmountMain.value = convertToDouble(amount)
-        count()
+    fun updateCurrency(
+        currencyId: Int,
+        currencyAlfa3: String,
+        currencyRate: String
+    ) {
+        val updatedCurrency =
+            getUpdatedCurrencyEntry(currencyId, currencyAlfa3, currencyRate)
+        updateCurrency(updatedCurrency)
     }
 
-    fun setMainCurrencyRate(id: Int, rate: String) {
-        var newRate = convertToDouble(rate)
-        if (newRate == 0.0) newRate = 1.0
-        when (id) {
-            1 -> _currencyRate1.value = newRate
-            2 -> _currencyRate2.value = newRate
-        }
-        count()
+    private fun getNewCurrencyEntry(alfa3: String, rate: Double): Currency {
+        return Currency(
+            alfa3 = alfa3,
+            rate = rate,
+            amount = mainAmount.value?.div(rate) ?: 0.0
+        )
     }
 
-    private fun convertToDouble(number: String): Double {
-        return if (number.isEmpty()) {
-            0.0
-        } else {
-            number.toDouble()
+    private fun getUpdatedCurrencyEntry(
+        id: Int,
+        alfa3: String,
+        rate: String
+    ): Currency {
+        return Currency(
+            id = id,
+            alfa3 = alfa3,
+            rate = rate.toDouble(),
+            amount = mainAmount.value?.div(rate.toDouble()) ?: 0.0
+        )
+    }
+
+    fun isEntryValid(currencyAlfa3: String, currencyRate: String): Boolean {
+        if (currencyAlfa3.isBlank() || currencyRate.isBlank()) {
+            return false
         }
+        return true
+    }
+
+    fun addNewCurrency(alfa3: String, rate: String) {
+        val newCurrency = getNewCurrencyEntry(alfa3, rate.toDouble())
+        insertCurrency(newCurrency)
+    }
+
+    fun updateAmounts(amount: Double) {
+        _mainAmount.value = amount
+        mainAmount.value?.let { newAmount ->
+            viewModelScope.launch {
+                currencyDao.updateAmounts(newAmount)
+            }
+        }
+    }
+}
+
+class CurrencyViewModelFactory(private val currencyDao: CurrencyDao) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(CurrencyViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return CurrencyViewModel(currencyDao) as T
+        }
+        throw  IllegalAccessException("Unknown ViewModel class")
     }
 }

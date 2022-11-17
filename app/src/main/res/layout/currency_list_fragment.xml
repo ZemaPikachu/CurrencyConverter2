@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin"
+    tools:context=".CurrencyListFragment">
+
+    <EditText
+        android:id="@+id/currency_amount_main_edit_text"
+        style="@style/TextAppearance.Material3.DisplayMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="0.0"
+        android:inputType="numberDecimal"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/count_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/count"
+        app:layout_constraintStart_toEndOf="@id/currency_amount_main_edit_text"
+        app:layout_constraintTop_toTopOf="@id/currency_amount_main_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/currency_amount_main_edit_text"
+    />
+
+    <View
+        android:id="@+id/divider1"
+        style="@style/Divider"
+        android:layout_marginBottom="@dimen/margin_between_elements"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currency_amount_main_edit_text" />
+
+    <TextView
+        android:id="@+id/currency_alfa3"
+        style="@style/Widget.CurrencyConverter2.Header"
+        android:layout_width="100dp"
+        android:layout_marginStart="@dimen/margin_between_elements"
+        android:text="@string/currency"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currency_amount_main_edit_text" />
+
+    <TextView
+        android:id="@+id/currency_rate"
+        style="@style/Widget.CurrencyConverter2.Header"
+        android:layout_width="100dp"
+        android:layout_marginEnd="@dimen/margin_between_elements"
+        android:text="@string/rate"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/currency_alfa3"
+        app:layout_constraintTop_toBottomOf="@id/currency_amount_main_edit_text" />
+
+    <TextView
+        android:id="@+id/currency_amount"
+        style="@style/Widget.CurrencyConverter2.Header"
+        android:layout_marginStart="@dimen/margin_between_elements"
+        android:text="@string/amount"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/currency_rate"
+        app:layout_constraintTop_toBottomOf="@id/currency_amount_main_edit_text" />
+
+    <View
+        android:id="@+id/divider2"
+        style="@style/Divider"
+        android:layout_marginBottom="@dimen/margin_between_elements"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currency_rate" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_new_currency"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
