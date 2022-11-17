@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -35,7 +34,13 @@ class CurrencyListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = CurrencyListAdapter()
+        val adapter = CurrencyListAdapter{
+            val action =
+                CurrencyListFragmentDirections.actionCurrencyListFragmentToCurrencyAddFragment(
+                    it.alfa3, it.id
+                )
+            this.findNavController().navigate(action)
+        }
 
         binding.recyclerView.adapter = adapter
 

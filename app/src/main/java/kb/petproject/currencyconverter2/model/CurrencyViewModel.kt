@@ -83,6 +83,12 @@ class CurrencyViewModel(private val currencyDao: CurrencyDao): ViewModel() {
             }
         }
     }
+
+    fun deleteCurrency(currency: Currency) {
+        viewModelScope.launch {
+            currencyDao.delete(currency)
+        }
+    }
 }
 
 class CurrencyViewModelFactory(private val currencyDao: CurrencyDao) : ViewModelProvider.Factory {

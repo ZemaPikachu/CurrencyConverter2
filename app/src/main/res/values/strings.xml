@@ -8,4 +8,8 @@
     <string name="currency_alfa3_req">Currency <font color='#FF0000'>*</font></string>
     <string name="currency_rate_req">Rate <font color='#FF0000'>*</font></string>
     <string name="save_action">Save</string>
+    <string name="delete_action">Delete</string>
+    <string name="delete_question">Are you sure you want to delete the currency?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

@@ -10,7 +10,7 @@ import kb.petproject.currencyconverter2.data.getFormattedAmount
 import kb.petproject.currencyconverter2.data.getFormattedRate
 import kb.petproject.currencyconverter2.databinding.CurrencyListItemBinding
 
-class CurrencyListAdapter() :
+class CurrencyListAdapter(private val onCurrencyClicked: (Currency) -> Unit) :
     ListAdapter<Currency, CurrencyListAdapter.CurrencyViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
@@ -25,9 +25,9 @@ class CurrencyListAdapter() :
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         val current = getItem(position)
-//        holder.itemView.setOnClickListener {
-//            onCurrencyClicked(current)
-//        }
+        holder.itemView.setOnClickListener {
+            onCurrencyClicked(current)
+        }
         holder.bind(current)
     }
 
